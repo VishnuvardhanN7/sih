@@ -1,0 +1,155 @@
+/* ----- Base ----- */
+body {
+  margin: 0;
+  background-color: #0f1116;
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-y: auto; /* ✅ Enables vertical scrolling */
+  padding: 2rem;
+}
+
+/* ----- Grid Layout ----- */
+.tools-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ----- Individual Card ----- */
+.tool-card {
+  background: #1a1c23;
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tool-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.45);
+}
+
+/* ----- Icon Circle ----- */
+.tool-card .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#3b82f6,#2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* ----- Text Styling ----- */
+.tool-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+.tool-card p {
+  color: #a1a1aa;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ----- Meta Row (progress + link) ----- */
+.tool-card .meta {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+.tool-card .meta a {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 500;
+}
+.tool-card .meta a:hover {
+  text-decoration: underline;
+}
+
+/* ----- Optional title & subtitle above the grid ----- */
+section.tools-grid::before {
+  content: "Everything You Need to Succeed";
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+section.tools-grid::after {
+  content: "Comprehensive tools designed to boost your exam preparation";
+  display: block;
+  color: #a1a1aa;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* ----- Badge ----- */
+.badge {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* ----- Scrollbar Styling ----- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1a1c23;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;
+  border-radius: 4px;
+}
+
+/* ----- Horizontal Scroll Row (if needed) ----- */
+.scroll-row {
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6 #1a1c23;
+  padding-bottom: 0.5rem;
+}
+.scroll-row::-webkit-scrollbar {
+  height: 8px;
+}
+.scroll-row::-webkit-scrollbar-track {
+  background: #1a1c23;
+}
+.scroll-row::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;
+  border-radius: 4px;
+}
+/* ----- Header Section Above Cards ----- */
+.dashboard-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+  font-size: 1.125rem;
+  color: #a1a1aa;
+  margin: 0;
+}

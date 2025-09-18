@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Document Manager",
+    "description": "Securely store and organize all your exam documents",
+    "badge": "100% Secure",
+    "footer": "8/10 Complete"
+  },
+  {
+    "title": "Expert Advisors",
+    "description": "Connect with successful students from top colleges",
+    "badge": "Verified Experts",
+    "footer": "3 Active"
+  },
+  {
+    "title": "AI Study Assistant",
+    "description": "Get instant help with step-by-step problem solving",
+    "badge": "Smart Learning",
+    "footer": "24/7 Available"
+  }
+]

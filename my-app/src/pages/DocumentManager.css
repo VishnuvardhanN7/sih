@@ -1,0 +1,110 @@
+.document-manager {
+  background-color: #111827;          /* Tailwind bg-gray-900 */
+  color: #ffffff;                     /* text-white */
+  min-height: 100vh;                  /* min-h-screen */
+  padding: 1.5rem;                    /* p-6 */
+  font-family: system-ui, sans-serif;
+}
+
+.document-manager .back-btn {
+  margin-bottom: 1rem;
+  color: #60a5fa;                      /* text-blue-400 */
+  text-decoration: none;
+  cursor: pointer;
+}
+.document-manager .back-btn:hover {
+  text-decoration: underline;
+}
+
+/* Heading & subtext */
+.document-manager h1 {
+  font-size: 1.5rem;                   /* text-2xl */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.document-manager p.subtext {
+  color: #9ca3af;                      /* text-gray-400 */
+  margin-bottom: 1.5rem;
+}
+
+/* Progress section */
+.progress-section h2 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.progress-bar {
+  width: 100%;
+  background-color: #374151;           /* bg-gray-700 */
+  border-radius: 9999px;               /* rounded-full */
+  height: 1rem;                        /* h-4 */
+}
+.progress-fill {
+  background-color: #2563eb;           /* bg-blue-600 */
+  height: 1rem;
+  border-radius: 9999px;
+}
+.progress-text {
+  color: #9ca3af;
+  margin-top: 0.5rem;
+}
+
+/* Grid of cards */
+.doc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .doc-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.doc-card {
+  background-color: #1f2937;           /* bg-gray-800 */
+  padding: 1rem;
+  border-radius: 0.5rem;               /* rounded-lg */
+}
+.doc-card h3 {
+  font-weight: 600;
+  font-size: 1.125rem;                 /* text-lg */
+  margin-bottom: 0.5rem;
+}
+.status-tag {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;                  /* text-xs */
+  color: #fff;
+}
+.status-verified { background-color: #16a34a; } /* green-600 */
+.status-uploaded { background-color: #2563eb; } /* blue-600 */
+.status-pending  { background-color: #eab308; } /* yellow-500 */
+.status-rejected { background-color: #dc2626; } /* red-600 */
+.status-default  { background-color: #6b7280; } /* gray-500 */
+
+.doc-card p.meta {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+.actions button {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+.actions .view    { background-color: #2563eb; }  /* blue-600 */
+.actions .view:hover    { background-color: #1d4ed8; }
+.actions .delete  { background-color: #dc2626; }  /* red-600 */
+.actions .delete:hover  { background-color: #b91c1c; }
+.actions .download{ background-color: #4b5563; }  /* gray-600 */
+.actions .download:hover{ background-color: #374151; }
