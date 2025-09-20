@@ -1,33 +1,26 @@
-import express from 'express';
-import multer from 'multer';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// server/server2.js
+const express = require('express');
+const multer = require('multer');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 app.use(cors());
 
-// Ensure uploads folder exists
 const uploadFolder = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
 }
 
-// Serve uploaded files statically
 app.use('/uploads', express.static(uploadFolder));
 
-// Configure multer for disk storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadFolder),
   filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 const upload = multer({ storage });
 
-// Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No file received' });
@@ -41,7 +34,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
   });
 });
 
-// Delete route
 app.delete('/delete/:filename', (req, res) => {
   const filePath = path.join(uploadFolder, req.params.filename);
   fs.unlink(filePath, err => {
@@ -54,7 +46,6 @@ app.delete('/delete/:filename', (req, res) => {
   });
 });
 
-// Start server
 app.listen(5001, () => {
-  console.log('server2 running on http://localhost:5001');
+  console.log('✅ server2 running on http://localhost:5001');
 });

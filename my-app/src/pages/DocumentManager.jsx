@@ -8,13 +8,19 @@ const DocumentManager = () => {
   const initialDocs = [
     { title: '10th Grade Certificate', key: 'grade10', filename: '' },
     { title: '12th Grade Certificate', key: 'grade12', filename: '' },
-    { title: 'Aadhar Card',            key: 'aadhar',  filename: '' },
-    { title: 'Income Certificate',     key: 'income',  filename: '' },
-    { title: 'Caste Certificate',      key: 'caste',   filename: '' },
-    { title: 'Passport Photo',         key: 'passport',filename: '' }
+    { title: 'Aadhar Card', key: 'aadhar', filename: '' },
+    { title: 'Income Certificate', key: 'income', filename: '' },
+    { title: 'Caste Certificate', key: 'caste', filename: '' },
+    { title: 'Passport Photo', key: 'passport', filename: '' }
   ];
 
   const [documents, setDocuments] = useState(initialDocs);
+  const [interests, setInterests] = useState({
+    vitap: null,
+    srm: null,
+    eamcet: null,
+    jee: null
+  });
 
   const handleUpload = async (file, docKey) => {
     if (!file) return;
@@ -93,6 +99,41 @@ const DocumentManager = () => {
     }
   };
 
+  const handleInterest = (key, value) => {
+    setInterests(prev => ({ ...prev, [key]: value }));
+  };
+
+  const registrationOptions = [
+    {
+      key: 'vitap',
+      name: 'VITAP',
+      logo: '/logos/vitap.webp',
+      link: 'https://vitap.ac.in',
+      deadline: '30th September 2025'
+    },
+    {
+      key: 'srm',
+      name: 'SRM',
+      logo: '/logos/srmap.webp',
+      link: 'https://www.srmist.edu.in',
+      deadline: '5th October 2025'
+    },
+    {
+      key: 'eamcet',
+      name: 'EAMCET',
+      logo: '/logos/eamcet.png',
+      link: 'https://eamcet.tsche.ac.in',
+      deadline: '10th October 2025'
+    },
+    {
+      key: 'jee',
+      name: 'JEE',
+      logo: '/logos/jee.png',
+      link: 'https://jeemain.nta.nic.in',
+      deadline: '15th October 2025'
+    }
+  ];
+
   return (
     <div className="document-manager">
       <button onClick={() => navigate('/')} className="back-btn">
@@ -167,6 +208,38 @@ const DocumentManager = () => {
           </div>
         ))}
       </div>
+
+      <div className="registration-options">
+        <h2>Upcoming Registrations</h2>
+        {registrationOptions.map(option => (
+          <div key={option.key} className="option-card">
+            <img src={option.logo} alt={`${option.name} Logo`} className="option-logo" />
+            <div className="option-info">
+              <div className="info-row">
+                <strong>{option.name}</strong>
+                <span>
+                  About: <a href={option.link} target="_blank" rel="noopener noreferrer">Visit Website</a>
+                </span>
+                <span className="deadline">Upto: {option.deadline}</span>
+              </div>
+            </div>
+            <div className="option-actions">
+              <button
+                className={`register-btn ${interests[option.key] === 'registered' ? 'active' : ''}`}
+                onClick={() => handleInterest(option.key, 'registered')}
+              >
+                Register
+              </button>
+              <button
+                className={`not-btn ${interests[option.key] === 'not_interested' ? 'active' : ''}`}
+                onClick={() => handleInterest(option.key, 'not_interested')}
+              >
+                Not Interested
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -175,9 +248,9 @@ function getStatusClass(status) {
   switch (status) {
     case 'Verified': return 'status-verified';
     case 'Uploaded': return 'status-uploaded';
-    case 'Pending':  return 'status-pending';
+    case 'Pending': return 'status-pending';
     case 'Rejected': return 'status-rejected';
-    default:         return 'status-default';
+    default: return 'status-default';
   }
 }
 

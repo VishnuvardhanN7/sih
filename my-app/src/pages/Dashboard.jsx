@@ -50,6 +50,7 @@ export default function Dashboard() {
       features: ["Real Students", "Verified Reviews"],
       badge: "Trusted Insights",
       footer: "Updated Weekly",
+      onClick: () => window.open("/college-reviews", "_self"),
     },
     {
       icon: <MessageSquare />,
@@ -63,20 +64,17 @@ export default function Dashboard() {
 
   return (
     <div className="h-screen overflow-y-auto bg-gray-900 p-6">
-      {/* Header Section */}
       <div className="dashboard-header">
-        <h1>Everything You Need to Succeed</h1>
-        <p>Comprehensive tools designed to boost your exam preparation</p>
+        <h1 className="text-white text-4xl font-bold mb-2">Everything You Need to Succeed</h1>
+        <p className="text-gray-300 mb-6">Comprehensive tools designed to boost your exam preparation</p>
       </div>
 
-      {/* First Row of Cards */}
       <div className="tools-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {cards.slice(0, 3).map((card, i) => (
           <Card key={i} {...card} />
         ))}
       </div>
 
-      {/* Second Row of Cards */}
       <div className="tools-grid grid grid-cols-1 md:grid-cols-3 gap-6 pb-12">
         {cards.slice(3).map((card, i) => (
           <Card key={i + 3} {...card} />
