@@ -1,3 +1,4 @@
+import React from "react";
 import Card from "../components/Card";
 import {
   FileText,
@@ -7,6 +8,7 @@ import {
   BookOpen,
   MessageSquare,
 } from "lucide-react";
+import "./dashboard.css";
 
 export default function Dashboard() {
   const cards = [
@@ -63,22 +65,40 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="h-screen overflow-y-auto bg-gray-900 p-6">
-      <div className="dashboard-header">
-        <h1 className="text-white text-4xl font-bold mb-2">Everything You Need to Succeed</h1>
-        <p className="text-gray-300 mb-6">Comprehensive tools designed to boost your exam preparation</p>
-      </div>
+    <div>
+      {/* 🔹 Navbar fixed at top */}
+      <nav className="navbar">
+        <div className="navbar-left">
+          <img
+            src="/logos/profile.webp"
+            alt="Profile"
+            className="profile-pic"
+          />
+          <span className="username">John Doe</span>
+        </div>
+        <button className="logout-btn">Logout</button>
+      </nav>
 
-      <div className="tools-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {cards.slice(0, 3).map((card, i) => (
-          <Card key={i} {...card} />
-        ))}
-      </div>
+      {/* 🔹 Dashboard Content */}
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h1 className="dashboard-title">Everything You Need to Succeed</h1>
+          <p className="dashboard-subtitle">
+            Comprehensive tools designed to boost your exam preparation
+          </p>
+        </div>
 
-      <div className="tools-grid grid grid-cols-1 md:grid-cols-3 gap-6 pb-12">
-        {cards.slice(3).map((card, i) => (
-          <Card key={i + 3} {...card} />
-        ))}
+        <div className="card-grid">
+          {cards.slice(0, 3).map((card, i) => (
+            <Card key={i} {...card} />
+          ))}
+        </div>
+
+        <div className="card-grid">
+          {cards.slice(3).map((card, i) => (
+            <Card key={i + 3} {...card} />
+          ))}
+        </div>
       </div>
     </div>
   );
