@@ -36,6 +36,8 @@ export default function Dashboard() {
       features: ["Instant Answers", "24/7 Availability"],
       badge: "Smart Learning",
       footer: "Always Online",
+      onClick: () => window.open("/chatBot", "_self"),
+
     },
     {
       icon: <Map />,
