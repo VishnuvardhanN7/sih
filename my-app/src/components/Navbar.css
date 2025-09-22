@@ -1,64 +1,54 @@
-/* 🔹 Navbar fixed at top */
-.navbar {
-  position: fixed;
+/* 🔹 Main header container to position the navbar */
+.navbar-header {
+  position: fixed; /* Or absolute, depending on your layout */
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #1a1a1a;
-  padding: 12px 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  justify-content: center; /* Horizontally center the nav container */
+  padding: 20px 0; /* Add some space from the top */
+  pointer-events: none; /* Allows clicks to pass through the header to the page below */
 }
 
-/* 🔹 Navbar left section */
-.navbar-left {
+/* 🔹 The dark, pill-shaped container for links */
+.nav-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 32px; /* Space between links */
+  background-color: #1a1a1a;
+  padding: 12px 32px;
+  border-radius: 50px; /* Fully rounded corners for the pill shape */
+  border: 1px solid #333; /* Subtle border */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  pointer-events: auto; /* Re-enables pointer events for the navbar itself */
 }
 
-.username {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #f5f5f5;
-}
-
-/* 🔹 Profile image */
-.profile-pic {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.profile-pic:hover {
-  transform: scale(1.05);
-}
-
-/* 🔹 Logout & Back buttons */
-.logout-btn {
-  background: #e63946;
-  color: white;
+/* 🔹 General styling for all navigation links/buttons */
+.nav-link {
+  background: none;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: bold;
+  color: #f0f0f0;
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.logout-btn:hover {
-  background: #d62839;
-}
-
-/* 🔹 Navbar right section */
-.navbar-right {
+  transition: color 0.2s ease-in-out;
+  padding: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px; /* Space between icon/pic and text */
+}
+
+.nav-link:hover {
+  color: #adff2f; /* A light green color like in the example */
+}
+
+/* 🔹 Specific styling for the small profile picture */
+.nav-profile-pic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
 }

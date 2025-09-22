@@ -1,243 +1,235 @@
-import React, { useState } from 'react';
+// src/pages/MindMapGenerator.jsx
+
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import Tree from 'react-d3-tree';
+import { FaFileUpload, FaTrash, FaCheckCircle, FaSpinner, FaTimesCircle, FaMap } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
-import './DocumentManager.css';
+import './MindMapGenerator.css'; 
 
-const DocumentManager = () => {
-  const initialDocs = [
-    { title: '10th Grade Certificate', key: 'grade10', filename: '' },
-    { title: '12th Grade Certificate', key: 'grade12', filename: '' },
-    { title: 'Aadhar Card', key: 'aadhar', filename: '' },
-    { title: 'Income Certificate', key: 'income', filename: '' },
-    { title: 'Caste Certificate', key: 'caste', filename: '' },
-    { title: 'Passport Photo', key: 'passport', filename: '' }
-  ];
+const API_BASE_URL = 'http://localhost:8000/api/mindmaps';
+const POLLING_INTERVAL = 3000;
 
-  const [documents, setDocuments] = useState(initialDocs);
-  const [interests, setInterests] = useState({
-    vitap: null,
-    srm: null,
-    eamcet: null,
-    jee: null
-  });
+// Utility function to render status badges
+const renderStatusBadge = (status) => {
+  let className = "status-badge ";
+  let icon = null;
 
-  const handleUpload = async (file, docKey) => {
-    if (!file) return;
+  switch (status) {
+    case 'completed':
+      className += 'status-completed';
+      icon = <FaCheckCircle className="inline-block mr-1" />;
+      break;
+    case 'processing':
+      className += 'status-processing';
+      icon = <FaSpinner className="inline-block mr-1 animate-spin" />;
+      break;
+    case 'failed':
+      className += 'status-failed';
+      icon = <FaTimesCircle className="inline-block mr-1" />;
+      break;
+    default:
+      className += 'status-default';
+      break;
+  }
+  return <span className={className}>{icon} {status}</span>;
+};
 
+// Transform data for react-d3-tree
+const transformToD3TreeFormat = (data) => {
+  if (!data || !data.central_idea) {
+    return { name: "No Data", children: [] };
+  }
+
+  const children = data.branches.map(branch => ({
+    name: branch.name,
+    children: branch.sub_branches ? branch.sub_branches.map(sub => ({ name: sub })) : []
+  }));
+
+  return {
+    name: data.central_idea,
+    children: children
+  };
+};
+
+export default function MindMapGenerator() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [mindMaps, setMindMaps] = useState([]);
+  const [pollingJobs, setPollingJobs] = useState({});
+  const [selectedMindMapData, setSelectedMindMapData] = useState(null);
+
+  const fetchMindMaps = useCallback(async () => {
+    try {
+      const response = await axios.get(API_BASE_URL);
+      setMindMaps(response.data);
+      const newPollingJobs = {};
+      response.data.forEach(job => {
+        if (job.status === 'processing') {
+          newPollingJobs[job.id] = true;
+        }
+      });
+      setPollingJobs(newPollingJobs);
+    } catch (error) {
+      console.error('Error fetching mind maps:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMindMaps();
+    const interval = setInterval(fetchMindMaps, POLLING_INTERVAL);
+    return () => clearInterval(interval);
+  }, [fetchMindMaps]);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setUploadStatus('');
+  };
+
+  const handleGenerateMindMap = async () => {
+    if (!selectedFile) {
+      alert('Please select a file first.');
+      return;
+    }
+
+    setUploadStatus('Uploading...');
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('docKey', docKey);
+    formData.append('file', selectedFile);
 
     try {
-      const res = await fetch('http://localhost:5001/upload', {
-        method: 'POST',
-        body: formData
+      const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      const data = await res.json();
-      if (data.success) {
-        setDocuments(prev =>
-          prev.map(d =>
-            d.key === docKey
-              ? {
-                  ...d,
-                  status: 'Uploaded',
-                  uploaded: new Date().toISOString().split('T')[0],
-                  size: (file.size / 1024 / 1024).toFixed(1) + ' MB',
-                  filename: data.filename
-                }
-              : d
-          )
-        );
-        alert('Upload successful');
-      } else {
-        alert('Upload failed: ' + (data.message || 'Unknown error'));
-      }
-    } catch (err) {
-      alert('Error uploading file: ' + err.message);
+      setUploadStatus(`Upload successful! Job ID: ${response.data.jobId}`);
+      setSelectedFile(null);
+      fetchMindMaps();
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setUploadStatus('Upload failed. Try again.');
     }
   };
 
-  const handleDelete = async (docKey, filename) => {
+  const handleDeleteMindMap = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5001/delete/${filename}`, {
-        method: 'DELETE'
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        setDocuments(prev =>
-          prev.map(d =>
-            d.key === docKey
-              ? {
-                  ...d,
-                  status: 'Pending',
-                  uploaded: '-',
-                  size: '-',
-                  filename: ''
-                }
-              : d
-          )
-        );
-        alert('File deleted successfully');
-      } else {
-        alert('Delete failed: ' + data.message);
+      await axios.delete(`${API_BASE_URL}/${id}`);
+      fetchMindMaps();
+      if (selectedMindMapData && selectedMindMapData.id === id) {
+        setSelectedMindMapData(null);
       }
-    } catch (err) {
-      alert('Error deleting file: ' + err.message);
+    } catch (error) {
+      console.error('Error deleting mind map:', error);
+      alert('Failed to delete mind map.');
     }
   };
 
-  const handleInterest = (key, value) => {
-    setInterests(prev => ({ ...prev, [key]: value }));
+  const handleViewMindMap = (mindmapData) => {
+    setSelectedMindMapData(mindmapData);
   };
 
-  const registrationOptions = [
-    {
-      key: 'vitap',
-      name: 'VITAP',
-      logo: '/logos/vitap.webp',
-      link: 'https://vitap.ac.in',
-      deadline: '30th September 2025'
-    },
-    {
-      key: 'srm',
-      name: 'SRM',
-      logo: '/logos/srmap.webp',
-      link: 'https://www.srmist.edu.in',
-      deadline: '5th October 2025'
-    },
-    {
-      key: 'eamcet',
-      name: 'EAMCET',
-      logo: '/logos/eamcet.png',
-      link: 'https://eamcet.tsche.ac.in',
-      deadline: '10th October 2025'
-    },
-    {
-      key: 'jee',
-      name: 'JEE',
-      logo: '/logos/jee.png',
-      link: 'https://jeemain.nta.nic.in',
-      deadline: '15th October 2025'
-    }
-  ];
+  const d3TreeData = selectedMindMapData ? transformToD3TreeFormat(selectedMindMapData.mindmapData) : null;
 
   return (
-    <div className="document-manager">
+    <div className="mindmap-page-container">
       <Navbar />
 
-      <h1>Document Management</h1>
-      <p className="subtext">Upload and manage your examination documents</p>
+      <div className="mindmap-header">
+        <span className="mindmap-header-icon"><FaMap /></span>
+        <h1><span className="mindmap-highlight">MIND MAP</span> GENERATOR</h1>
+      </div>
 
-      <div className="progress-section">
-        <h2>Document Completion Progress</h2>
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{
-              width:
-                ((documents.filter(
-                  d => d.status === 'Verified' || d.status === 'Uploaded'
-                ).length) / 6) * 100 + '%'
-            }}
-          ></div>
-        </div>
-        <p className="progress-text">
-          {
-            documents.filter(
-              d => d.status === 'Verified' || d.status === 'Uploaded'
-            ).length
-          } of 6 required documents uploaded
+      <div className="mindmap-section upload-section">
+        <h2>Upload Study Material</h2>
+        <p className="mindmap-upload-description">
+          Upload PDF notes or documents to generate interactive mind maps. Supports PDF files up to 10MB.
         </p>
+        <div className="file-input-container">
+          <label htmlFor="file-upload" className="custom-file-upload">
+            Choose File
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            accept=".pdf"
+            onChange={handleFileChange}
+          />
+          <span className="selected-file-name">
+            {selectedFile ? selectedFile.name : 'No file chosen'}
+          </span>
+          <button
+            onClick={handleGenerateMindMap}
+            className="generate-button"
+            disabled={!selectedFile}
+          >
+            Generate Mind Map
+          </button>
+        </div>
+        {uploadStatus && (
+          <p className={`upload-status-message ${uploadStatus.includes('successful') ? 'success' : 'error'}`}>
+            {uploadStatus}
+          </p>
+        )}
       </div>
 
-      <div className="doc-grid">
-        {documents.map((doc, idx) => (
-          <div key={idx} className="doc-card">
-            <h3>{doc.title}</h3>
-            <span className={`status-tag ${getStatusClass(doc.status || 'Pending')}`}>
-              {doc.status || 'Pending'}
-            </span>
-            <p className="meta">Uploaded: {doc.uploaded || '-'}</p>
-            <p className="meta">Size: {doc.size || '-'}</p>
-
-            <div className="actions">
-              <label className="upload-btn">
-                Upload
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={e => handleUpload(e.target.files[0], doc.key)}
-                />
-              </label>
-
-              {doc.filename && (
-                <>
-                  <a
-                    href={`http://localhost:5001/uploads/${doc.filename}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="view-btn"
-                  >
-                    View
-                  </a>
+      <div className="mindmap-section your-mindmaps-section">
+        <h2>Your Mind Maps</h2>
+        {mindMaps.length === 0 ? (
+          <p className="mindmap-upload-description">No generated mind maps yet.</p>
+        ) : (
+          <div className="mindmap-list">
+            {mindMaps.map((map) => (
+              <div key={map.id} className="mindmap-item">
+                <div className="mindmap-item-info">
+                  <span className="mindmap-item-title">{map.title}</span>
+                  <span className="mindmap-item-date">{new Date(map.createdAt).toLocaleString()}</span>
+                </div>
+                <div className="mindmap-item-actions">
+                  {renderStatusBadge(map.status)}
+                  {map.status === 'completed' && (
+                    <button
+                      onClick={() => handleViewMindMap(map)}
+                      className="view-button"
+                    >
+                      View
+                    </button>
+                  )}
                   <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(doc.key, doc.filename)}
+                    onClick={() => handleDeleteMindMap(map.id)}
+                    className="delete-button"
                   >
-                    Delete
+                    <FaTrash />
                   </button>
-                </>
-              )}
-            </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
 
-      <div className="registration-options">
-        <h2>Upcoming Registrations</h2>
-        {registrationOptions.map(option => (
-          <div key={option.key} className="option-card">
-            <img src={option.logo} alt={`${option.name} Logo`} className="option-logo" />
-            <div className="option-info">
-              <div className="info-row">
-                <strong>{option.name}</strong>
-                <span>
-                  About: <a href={option.link} target="_blank" rel="noopener noreferrer">Visit Website</a>
-                </span>
-                <span className="deadline">Upto: {option.deadline}</span>
-              </div>
-            </div>
-            <div className="option-actions">
-              <button
-                className={`register-btn ${interests[option.key] === 'registered' ? 'active' : ''}`}
-                onClick={() => handleInterest(option.key, 'registered')}
-              >
-                Register
-              </button>
-              <button
-                className={`not-btn ${interests[option.key] === 'not_interested' ? 'active' : ''}`}
-                onClick={() => handleInterest(option.key, 'not_interested')}
-              >
-                Not Interested
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="mindmap-section preview-section">
+        <h2>Mind Map Preview</h2>
+        <div className="mindmap-preview-container">
+          {d3TreeData ? (
+            <Tree
+              data={d3TreeData}
+              orientation="horizontal"
+              translate={{ x: 200, y: 250 }}
+              nodeSize={{ x: 180, y: 100 }}
+              depthFactor={200}
+              separation={{ siblings: 1.2, nonSiblings: 1.2 }}
+              pathFunc="step"
+              rootNodeClassName="node__root"
+              branchNodeClassName="node__branch"
+              leafNodeClassName="node__leaf"
+              zoomable={true}
+              draggable={true}
+            />
+          ) : (
+            <p className="mindmap-upload-description">Select a mind map to view its preview.</p>
+          )}
+        </div>
       </div>
     </div>
   );
-};
-
-function getStatusClass(status) {
-  switch (status) {
-    case 'Verified': return 'status-verified';
-    case 'Uploaded': return 'status-uploaded';
-    case 'Pending': return 'status-pending';
-    case 'Rejected': return 'status-rejected';
-    default: return 'status-default';
-  }
 }
-
-export default DocumentManager;

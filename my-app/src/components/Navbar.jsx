@@ -6,26 +6,38 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="navbar">
-      <div className="navbar-left">
-        <img
-          src="/logos/profile.webp"
-          alt="Profile"
-          className="profile-pic"
+    <header className="navbar-header">
+      <nav className="nav-container">
+        {/* Profile Link */}
+        <div 
+          className="nav-link profile-link" 
           onClick={() => navigate('/profile')}
-        />
-        <span className="username">Trishanth</span>
-      </div>
+        >
+          <img
+            src="/logos/profile.webp" // Make sure this path is correct
+            alt="Profile"
+            className="nav-profile-pic"
+          />
+          <span>Trishanth</span>
+        </div>
 
-      <div className="navbar-right">
-        <button className="logout-btn" onClick={() => navigate('/logout')}>
+        {/* Dashboard Link */}
+        <button 
+          className="nav-link" 
+          onClick={() => navigate('/')}
+        >
+          Dashboard
+        </button>
+
+        {/* Logout Link */}
+        <button 
+          className="nav-link" 
+          onClick={() => navigate('/logout')}
+        >
           Logout
         </button>
-        <button className="logout-btn" onClick={() => navigate('/')}>
-          ← Back to Dashboard
-        </button>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };
 

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {
-    "start": "concurrently \"node server.js\" \"node server2.js\""
-  },
+ "scripts": {
+  "start": "concurrently \"node server.js\" \"node server2.js\" \"node mindmap-server.js\""
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

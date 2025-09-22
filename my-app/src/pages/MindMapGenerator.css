@@ -1,0 +1,304 @@
+/* src/pages/MindMapGenerator.css */
+
+/* --- Base Page & Layout --- */
+.mindmap-page-container {
+  background-color: #0d0d0d;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+.mindmap-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2d2d2d;
+  justify-content: center;
+}
+
+.mindmap-header-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background-color: #6366f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.mindmap-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e0e0e0;
+}
+
+.mindmap-highlight {
+  color: #f5ea06; /* The new color for "MIND MAP" */
+}
+
+/* --- Section Styling (Cards) --- */
+.mindmap-section {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.mindmap-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.mindmap-upload-description {
+  font-size: 0.95rem;
+  color: #a1a1aa;
+  margin-bottom: 1.5rem;
+}
+
+/* --- File Input & Buttons --- */
+.file-input-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.file-input-container label {
+  font-size: 0.9rem;
+  color: black;
+}
+.file-input-container label:hover {
+  font-size: 0.9rem;
+  color: white;
+  background-color: black;
+  box-shadow: #f5e906c5 1px 1px 5px;
+}
+
+.file-input-container input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  background-color: #f5ea06;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+  border: none;
+}
+
+
+
+.selected-file-name {
+  color: #a1a1aa;
+  font-size: 0.9rem;
+  flex-grow: 1;
+}
+
+.generate-button {
+  background-color: #6366f1;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  border: none;
+  font-size: 1rem;
+}
+
+.generate-button:hover:not(:disabled) {
+  background-color: #4f46e5;
+}
+
+.generate-button:disabled {
+  background-color: #4b5563;
+  cursor: not-allowed;
+}
+
+.upload-status-message {
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.upload-status-message.success {
+  background-color: #16a34a;
+  color: white;
+}
+
+.upload-status-message.error {
+  background-color: #dc2626;
+  color: white;
+}
+
+/* --- Mind Map List --- */
+.mindmap-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.mindmap-item {
+  background-color: #2d2d2d;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mindmap-item:hover {
+  background-color: #3a3a3a;
+}
+
+.mindmap-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mindmap-item-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.mindmap-item-date {
+  font-size: 0.8rem;
+  color: #a1a1aa;
+}
+
+.mindmap-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  min-width: 80px;
+  text-align: center;
+}
+
+.status-completed {
+  background-color: #16a34a;
+  color: white;
+}
+
+.status-processing {
+  background-color: #facc15;
+  color: #333;
+}
+
+.status-failed {
+  background-color: #dc2626;
+  color: white;
+}
+
+.view-button, .delete-button {
+  background-color: #4b5563;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.view-button:hover {
+  background-color: #6b7280;
+}
+
+.delete-button {
+  background-color: #ef4444;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
+
+/* --- Mind Map Preview Container & Visualization --- */
+.mindmap-preview-container {
+  min-height: 600px;
+  background-color: #333;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Styles for react-d3-tree nodes */
+.node__root > circle {
+  fill: #6366f1 !important;
+  stroke: #6366f1 !important;
+  stroke-width: 3px;
+}
+
+.node__branch > circle {
+  fill: #3b82f6 !important;
+  stroke: #3b82f6 !important;
+  stroke-width: 2px;
+}
+
+.node__leaf > circle {
+  fill: #10b981 !important;
+  stroke: #10b981 !important;
+  stroke-width: 1px;
+}
+
+.node__label {
+  fill: #fff !important;
+  font-size: 0.8rem;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .mindmap-header h1 {
+    font-size: 1.8rem;
+  }
+  .mindmap-section {
+    padding: 1rem;
+  }
+  .mindmap-section h2 {
+    font-size: 1.2rem;
+  }
+  .file-input-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .generate-button {
+    width: 100%;
+  }
+  .mindmap-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .mindmap-item-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
