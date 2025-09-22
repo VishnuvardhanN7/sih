@@ -7,5 +7,8 @@ html, body, #root {
 
 /* Apply the main background and text color */
 body {
-  @apply bg-gray-900 text-white font-sans;
+  background-color: #111827; /* Tailwind's bg-gray-900 */
+  color: #ffffff;            /* Tailwind's text-white */
+  font-family: 'Inter', system-ui, sans-serif;
 }
+

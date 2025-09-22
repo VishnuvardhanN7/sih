@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import './DocumentManager.css';
 
 const DocumentManager = () => {
-  const navigate = useNavigate();
-
   const initialDocs = [
     { title: '10th Grade Certificate', key: 'grade10', filename: '' },
     { title: '12th Grade Certificate', key: 'grade12', filename: '' },
@@ -35,11 +33,6 @@ const DocumentManager = () => {
         body: formData
       });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText || `HTTP ${res.status}`);
-      }
-
       const data = await res.json();
       if (data.success) {
         setDocuments(prev =>
@@ -60,7 +53,6 @@ const DocumentManager = () => {
         alert('Upload failed: ' + (data.message || 'Unknown error'));
       }
     } catch (err) {
-      console.error('Upload error:', err);
       alert('Error uploading file: ' + err.message);
     }
   };
@@ -71,10 +63,7 @@ const DocumentManager = () => {
         method: 'DELETE'
       });
 
-      const contentType = res.headers.get('content-type');
-      const isJson = contentType && contentType.includes('application/json');
-      const data = isJson ? await res.json() : { success: false, message: 'Unexpected response format' };
-
+      const data = await res.json();
       if (data.success) {
         setDocuments(prev =>
           prev.map(d =>
@@ -94,7 +83,6 @@ const DocumentManager = () => {
         alert('Delete failed: ' + data.message);
       }
     } catch (err) {
-      console.error('Delete error:', err);
       alert('Error deleting file: ' + err.message);
     }
   };
@@ -136,9 +124,7 @@ const DocumentManager = () => {
 
   return (
     <div className="document-manager">
-      <button onClick={() => navigate('/')} className="back-btn">
-        ← Back to Dashboard
-      </button>
+      <Navbar />
 
       <h1>Document Management</h1>
       <p className="subtext">Upload and manage your examination documents</p>
@@ -186,7 +172,7 @@ const DocumentManager = () => {
                 />
               </label>
 
-              {doc.status === 'Uploaded' && doc.filename && (
+              {doc.filename && (
                 <>
                   <a
                     href={`http://localhost:5001/uploads/${doc.filename}`}

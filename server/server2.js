@@ -1,4 +1,3 @@
-// server/server2.js
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
@@ -16,8 +15,8 @@ if (!fs.existsSync(uploadFolder)) {
 app.use('/uploads', express.static(uploadFolder));
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadFolder),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+  destination: (_, __, cb) => cb(null, uploadFolder),
+  filename: (_, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 const upload = multer({ storage });
 

@@ -1,5 +1,7 @@
-import React from "react";
+import Navbar from "../components/Navbar";
+import React, { useState } from "react";
 import Card from "../components/Card";
+import ProfilePopup from "../components/ProfilePopup";
 import {
   FileText,
   Users,
@@ -8,9 +10,18 @@ import {
   BookOpen,
   MessageSquare,
 } from "lucide-react";
-import "./dashboard.css";
+import "./Dashboard.css";
 
 export default function Dashboard() {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const user = {
+    image: "/public/logos/profile.webp",
+    name: "Trishanth",
+    email: "trishanth@example.com",
+    phone: "+91 9876543210",
+  };
+
   const cards = [
     {
       icon: <FileText />,
@@ -28,6 +39,7 @@ export default function Dashboard() {
       features: ["Real Subject Experts", "24/7 Availability"],
       badge: "Verified Experts",
       footer: "3 Experts",
+      onClick: () => { /* Add navigation logic here */ }
     },
     {
       icon: <Bot />,
@@ -36,6 +48,7 @@ export default function Dashboard() {
       features: ["Instant Answers", "24/7 Availability"],
       badge: "Smart Learning",
       footer: "Always Online",
+      onClick: () => { /* Add navigation logic here */ }
     },
     {
       icon: <Map />,
@@ -44,6 +57,7 @@ export default function Dashboard() {
       features: ["Smart Suggestions", "Customizable"],
       badge: "AI Powered",
       footer: "5 Generated",
+      onClick: () => window.open("/mind-map-generator", "_self"),
     },
     {
       icon: <BookOpen />,
@@ -61,25 +75,25 @@ export default function Dashboard() {
       features: ["Private & Safe", "Real-time"],
       badge: "Secure Messaging",
       footer: "2 Unread",
+      onClick: () => { /* Add navigation logic here */ }
     },
   ];
 
   return (
-    <div>
-      {/* 🔹 Navbar fixed at top */}
+    <>
       <nav className="navbar">
         <div className="navbar-left">
           <img
-            src="/logos/profile.webp"
+            src={user.image}
             alt="Profile"
             className="profile-pic"
+            onClick={() => setShowPopup(true)}
           />
-          <span className="username">John Doe</span>
+          <span className="username">{user.name}</span>
         </div>
         <button className="logout-btn">Logout</button>
       </nav>
 
-      {/* 🔹 Dashboard Content */}
       <div className="dashboard-container">
         <div className="dashboard-header">
           <h1 className="dashboard-title">Everything You Need to Succeed</h1>
@@ -88,18 +102,17 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="card-grid">
-          {cards.slice(0, 3).map((card, i) => (
-            <Card key={i} {...card} />
-          ))}
-        </div>
-
-        <div className="card-grid">
-          {cards.slice(3).map((card, i) => (
-            <Card key={i + 3} {...card} />
+        <div className="circle-layout">
+          <img src="/public/logos/circle.webp" alt="Center Icon" className="center-image" />
+          {cards.map((card, i) => (
+            <div className={`circle-item item-${i}`} key={i}>
+              <Card {...card} />
+            </div>
           ))}
         </div>
       </div>
-    </div>
+
+      {showPopup && <ProfilePopup user={user} onClose={() => setShowPopup(false)} />}
+    </>
   );
 }
